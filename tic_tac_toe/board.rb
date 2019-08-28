@@ -22,6 +22,7 @@ class Board
 
   def update(location, value)
     clean if game_won?
+    try_again('taken', value) if taken?(location)
 
     case location
     when '1'
@@ -43,13 +44,12 @@ class Board
     when '9'
       c[:z] ||= value
     else
-      puts 'Invalid Location, Try Again:'
-      loc = gets.chomp.downcase
-      update(loc, value)
-      puts ''
+      try_again('invalid', value)
     end
     show
-    clean if is_full?
+    if full?
+      clean unless game_won?
+    end
   end
 
   def check
@@ -92,7 +92,7 @@ class Board
   # Horizontal Check
   def h_check
     rows.each do |row|
-      return "#{winner(row[:x])}" if row.values.all? { |val| val == row.values[0] && !row.values[0].nil? }
+      return winner(row[:x]) if row.values.all? { |val| val == row.values[0] && !row.values[0].nil? }
     end
   end
 
@@ -110,7 +110,6 @@ class Board
         col3 << val if key == :z
       end
     end
-    # p columns
     columns.each do |col|
       return winner(col[0]) if col.all? { |str| str == col[0] && !col[0].nil? }
     end
@@ -120,7 +119,7 @@ class Board
   def a_check
     angle1 = [a[:x], b[:y], c[:z]]
     angle2 = [a[:z], b[:y], c[:x]]
-    # p [angle1, angle2].inspect
+
     if angle1.all?(angle1[0])
       winner(angle1[0]) unless angle1[0].nil?
     elsif angle2.all?(angle2[0])
@@ -128,7 +127,7 @@ class Board
     end
   end
 
-  def is_full?
+  def full?
     all_keys = []
 
     rows.each do |row|
@@ -146,5 +145,45 @@ class Board
 
   def winner(val)
     'Player ' + val.upcase + ' Wins.' unless val.nil?
+  end
+
+  def try_again(type, value)
+    case type
+    when 'invalid'
+      puts 'Invalid Location, Try Again:'
+      loc = gets.chomp.downcase
+      update(loc, value)
+      puts ''
+    when 'taken'
+      puts 'Location in use, Try Again:'
+      loc = gets.chomp.downcase
+      update(loc, value)
+      puts ''
+    end
+  end
+
+  def taken?(location)
+    loc = case location
+          when '1'
+            a[:x]
+          when '2'
+            a[:y]
+          when '3'
+            a[:z]
+          when '4'
+            b[:x]
+          when '5'
+            b[:y]
+          when '6'
+            b[:z]
+          when '7'
+            c[:x]
+          when '8'
+            c[:y]
+          when '9'
+            c[:z]
+          end
+    # loc.class == NilClass ? false : true
+    loc.class != NilClass
   end
 end

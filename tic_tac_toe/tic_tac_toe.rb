@@ -7,14 +7,12 @@ puts '***************** Tic Tac Toe by Franklyn Afeso ******************'
 puts '******************************************************************'
 puts '***** Each Player gets a Turn to Choose a Location. First to *****'
 puts '***** get 3 of their letters to match (up, down, cross) wins *****'
-puts '***** Choosing an already picked location, incures a penalty *****'
-puts '***** Game can be played, by typing play_game in the console *****'
 puts '******************************************************************'
-puts '******* Below, is the Boards Layout, and its Location Keys *******'
+puts '****** Below, is the Board\'s Layout, and its Location Keys ******'
 puts '  **************************** |1|2|3| *************************  '
 puts '  **************************** |4|5|6| *************************  '
-puts '  **************************** |7|8|9| *************************  '
-puts '*****************************  HAVE FUN ************************* '
+puts ' ***************************** |7|8|9| ************************** '
+puts '***************************** HAVE  FUN **************************'
 
 # Player Class
 class Player
