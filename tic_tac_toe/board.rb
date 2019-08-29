@@ -22,7 +22,7 @@ class Board
 
   def update(location, value)
     clean if game_won?
-    try_again('taken', value) if taken?(location)
+    return try_again('taken', value) if taken?(location)
 
     case location
     when '1'
@@ -44,7 +44,7 @@ class Board
     when '9'
       c[:z] ||= value
     else
-      try_again('invalid', value)
+      return try_again('invalid', value)
     end
     show
     if full?
@@ -92,7 +92,7 @@ class Board
   # Horizontal Check
   def h_check
     rows.each do |row|
-      return winner(row[:x]) if row.values.all? { |val| val == row.values[0] && !row.values[0].nil? }
+      return win(row[:x]) if row.values.all? { |val| val == row.values[0] && !row.values[0].nil? }
     end
   end
 
@@ -111,7 +111,7 @@ class Board
       end
     end
     columns.each do |col|
-      return winner(col[0]) if col.all? { |str| str == col[0] && !col[0].nil? }
+      return win(col[0]) if col.all? { |val| val == col[0] && !col[0].nil? }
     end
   end
 
@@ -121,29 +121,29 @@ class Board
     angle2 = [a[:z], b[:y], c[:x]]
 
     if angle1.all?(angle1[0])
-      winner(angle1[0]) unless angle1[0].nil?
+      win(angle1[0]) unless angle1[0].nil?
     elsif angle2.all?(angle2[0])
-      winner(angle2[0]) unless angle2[0].nil?
+      win(angle2[0]) unless angle2[0].nil?
     end
   end
 
   def full?
-    all_keys = []
+    board_spaces = []
 
     rows.each do |row|
       row.each do |_, val|
-        all_keys << val
+        board_spaces << val
       end
     end
 
-    all_keys.all? { |val| !val.nil? }
+    board_spaces.all? { |val| !val.nil? }
   end
 
   def game_won?
     check.to_s.include?('Win') ? true : false
   end
 
-  def winner(val)
+  def win(val)
     'Player ' + val.upcase + ' Wins.' unless val.nil?
   end
 

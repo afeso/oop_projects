@@ -47,4 +47,4 @@ def play_game
   play_game if board.check.nil?
 end
 
-puts play_game
+play_game
